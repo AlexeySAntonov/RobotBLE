@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.robotble.routing.RoutingFragment
 import com.example.robotble.searchdevices.SearchBluetoothDevicesFragment
 import com.example.robotble.searchdevices.SearchBluetoothLowEnergyDevicesFragment
 
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
   private fun setFragment() {
     supportFragmentManager
       .beginTransaction()
-      .replace(R.id.container, SearchBluetoothLowEnergyDevicesFragment.newInstance())
+      .replace(R.id.container, RoutingFragment.newInstance())
       .commitAllowingStateLoss()
   }
 

@@ -41,6 +41,7 @@ class SearchBluetoothDevicesFragment : Fragment(R.layout.fragment_search_devices
       if (bluetoothAdapter.isDiscovering) stopScan()
       else startScan()
     }
+    back.setOnClickListener { activity?.onBackPressed() }
   }
 
   override fun onDestroyView() {

@@ -45,6 +45,7 @@ class SearchBluetoothLowEnergyDevicesFragment : Fragment(R.layout.fragment_searc
     super.onViewCreated(view, savedInstanceState)
     recycler.adapter = devicesAdapter
     scan.setOnClickListener { scanLeDevice() }
+    back.setOnClickListener { activity?.onBackPressed() }
   }
 
   private fun scanLeDevice() {
@@ -52,12 +53,14 @@ class SearchBluetoothLowEnergyDevicesFragment : Fragment(R.layout.fragment_searc
       true -> {
         if (busy.compareAndSet(false, true)) {
           scan.isEnabled = false
+          scanLabel.text = "Scanning..."
           devicesAdapter.items = listOf(LoadingItem)
           handler.postDelayed({
             bluetoothLeScanner?.stopScan(scanCallback)
             activity?.runOnUiThread {
               devicesAdapter.items = devicesAdapter.items.filterIsInstance<DeviceItem>()
               scan.isEnabled = true
+              scanLabel.text = "Founded devices"
             }
             busy.set(false)
           }, SCAN_PERIOD)
@@ -85,6 +88,11 @@ class SearchBluetoothLowEnergyDevicesFragment : Fragment(R.layout.fragment_searc
         add(LoadingItem)
       }
     }
+  }
+
+  override fun onDestroyView() {
+    bluetoothLeScanner?.stopScan(scanCallback)
+    super.onDestroyView()
   }
 
   override fun onDestroy() {

@@ -6,20 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+  <ImageView
+      android:id="@+id/back"
+      android:layout_width="?actionBarSize"
+      android:layout_height="?actionBarSize"
+      android:background="@color/appGrey"
+      android:foreground="?selectableItemBackgroundBorderless"
+      android:scaleType="center"
+      android:src="@drawable/ic_baseline_arrow_back_ios_24"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
   <TextView
       android:id="@+id/scanLabel"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:background="@color/appGreen"
+      android:layout_height="0dp"
+      android:background="@color/appGrey"
+      android:ellipsize="end"
       android:fontFamily="sans-serif-medium"
-      android:gravity="center"
+      android:gravity="start|center_vertical"
+      android:maxLines="1"
       android:paddingTop="8dp"
       android:paddingBottom="8dp"
       android:text="Press scan when your device is ready"
       android:textColor="@color/white"
+      android:textSize="16sp"
+      app:layout_constraintBottom_toBottomOf="@+id/back"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:layout_constraintStart_toEndOf="@+id/back"
+      app:layout_constraintTop_toTopOf="@+id/back" />
 
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/recycler"
