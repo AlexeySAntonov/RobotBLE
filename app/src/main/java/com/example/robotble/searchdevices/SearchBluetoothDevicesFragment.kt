@@ -11,6 +11,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.robotble.R
 import com.example.robotble.base.ListItem
+import com.example.robotble.controller.DeviceControllerFragment
 import com.example.robotble.searchdevices.delegate.item.DeviceItem
 import com.example.robotble.searchdevices.delegate.item.LoadingItem
 import kotlinx.android.synthetic.main.fragment_search_devices.*
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_search_devices.*
 class SearchBluetoothDevicesFragment : Fragment(R.layout.fragment_search_devices) {
 
   private val bluetoothAdapter by lazy { BluetoothAdapter.getDefaultAdapter() }
-  private val devicesAdapter by lazy { DevicesAdapter() }
+  private val devicesAdapter by lazy { DevicesAdapter { navigateToController(it) } }
 
   private val receiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -86,6 +87,15 @@ class SearchBluetoothDevicesFragment : Fragment(R.layout.fragment_search_devices
       add(0, DeviceItem(device = device))
       add(LoadingItem)
     }
+  }
+
+  private fun navigateToController(device: BluetoothDevice) {
+    activity?.supportFragmentManager
+      ?.beginTransaction()
+      ?.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+      ?.replace(R.id.container, DeviceControllerFragment.newInstance(device))
+      ?.addToBackStack(null)
+      ?.commitAllowingStateLoss()
   }
 
   companion object {

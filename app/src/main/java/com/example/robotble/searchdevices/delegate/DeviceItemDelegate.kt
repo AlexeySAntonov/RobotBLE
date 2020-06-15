@@ -1,5 +1,6 @@
 package com.example.robotble.searchdevices.delegate
 
+import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,9 @@ import com.example.robotble.searchdevices.delegate.item.DeviceItem
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_device.view.*
 
-class DeviceItemDelegate : AbsListItemAdapterDelegate<DeviceItem, ListItem, DeviceItemDelegate.ViewHolder>() {
+class DeviceItemDelegate(
+  private val onDeviceClick: (BluetoothDevice) -> Unit
+) : AbsListItemAdapterDelegate<DeviceItem, ListItem, DeviceItemDelegate.ViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
     ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_device, parent, false))
@@ -19,12 +22,13 @@ class DeviceItemDelegate : AbsListItemAdapterDelegate<DeviceItem, ListItem, Devi
 
   override fun onBindViewHolder(item: DeviceItem, holder: ViewHolder, payloads: MutableList<Any>) = holder.bind(item)
 
-  class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: DeviceItem) {
       with(itemView) {
         name.text = item.device.name ?: "Undefined"
         address.text = "Address: ${item.device.address}"
         rssi.text = "rssi: ${item.rssi}"
+        setOnClickListener { onDeviceClick.invoke(item.device) }
       }
     }
   }
