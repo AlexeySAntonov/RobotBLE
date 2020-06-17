@@ -88,6 +88,7 @@ class DeviceControllerFragment : Fragment(R.layout.fragment_device_controller) {
               message += btSocket?.inputStream?.read()?.toChar()
             }
             Log.w("BT Message: ", message)
+            displayReport(message)
           } else {
             Log.w("BT Message: ", "No bytes available")
           }
@@ -97,6 +98,16 @@ class DeviceControllerFragment : Fragment(R.layout.fragment_device_controller) {
           onFail("BT Read message from socket", e)
         } catch (ignore: InterruptedException) {
         }
+      }
+    }
+  }
+
+  private fun displayReport(message: String) {
+    activity?.runOnUiThread {
+      try {
+        report.text = "Robot report: $message"
+      } catch (e: Exception) {
+        onFail("BT Display report", e)
       }
     }
   }
