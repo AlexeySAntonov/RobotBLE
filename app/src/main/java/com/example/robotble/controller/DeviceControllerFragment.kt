@@ -1,15 +1,19 @@
 package com.example.robotble.controller
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.robotble.R
+import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.fragment_device_controller.*
 import java.io.IOException
 import java.nio.charset.Charset
@@ -36,12 +40,12 @@ class DeviceControllerFragment : Fragment(R.layout.fragment_device_controller) {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    forward.setOnClickListener { sendSignal(FORWARD) }
-    forwardLeft.setOnClickListener { sendSignal(FORWARD_LEFT) }
-    forwardRight.setOnClickListener { sendSignal(FORWARD_RIGHT) }
-    backward.setOnClickListener { sendSignal(BACKWARD) }
-    backwardLeft.setOnClickListener { sendSignal(BACKWARD_LEFT) }
-    backwardRight.setOnClickListener { sendSignal(BACKWARD_RIGHT) }
+    forward.setOnTouchWithActionListener { sendSignal(FORWARD) }
+    forwardLeft.setOnTouchWithActionListener { sendSignal(FORWARD_LEFT) }
+    forwardRight.setOnTouchWithActionListener { sendSignal(FORWARD_RIGHT) }
+    backward.setOnTouchWithActionListener { sendSignal(BACKWARD) }
+    backwardLeft.setOnTouchWithActionListener { sendSignal(BACKWARD_LEFT) }
+    backwardRight.setOnTouchWithActionListener { sendSignal(BACKWARD_RIGHT) }
     stop.setOnClickListener { sendSignal(STOP) }
   }
 
@@ -129,6 +133,23 @@ class DeviceControllerFragment : Fragment(R.layout.fragment_device_controller) {
       btSocket?.close()
     } catch (e: IOException) {
       Log.e("BT Socket connection: ", "Socket close failed")
+    }
+  }
+
+  @SuppressLint("ClickableViewAccessibility")
+  private fun Button.setOnTouchWithActionListener(action: () -> Unit) {
+    this.setOnTouchListener { v, event ->
+      when (event.action) {
+        MotionEvent.ACTION_DOWN -> {
+          v.isPressed = true
+          action.invoke()
+        }
+        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+          v.isPressed = false
+          sendSignal(STOP)
+        }
+      }
+      true
     }
   }
 
